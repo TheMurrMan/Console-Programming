@@ -48,10 +48,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	UAnimSequence* FireAnimation;
 
+	
+
 protected:
 	
 	/** Fires a projectile. */
 	void Fire();
+
+	//void SpawnBomb();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);

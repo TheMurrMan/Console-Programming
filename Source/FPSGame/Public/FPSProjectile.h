@@ -9,6 +9,7 @@
 
 class UProjectileMovementComponent;
 class USphereComponent;
+class AFPSBombActor;
 
 
 UCLASS()
@@ -26,6 +27,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Bombs")
+	TSubclassOf<AFPSBombActor> BombClass;
+
 public:
 
 	AFPSProjectile();
@@ -39,5 +43,7 @@ public:
 
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+	void SpawnBomb(FVector location);
 };
 

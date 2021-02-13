@@ -1,6 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "FPSProjectile.h"
+#include"FPSProjectile.h"
+#include "FPSBombActor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -31,6 +32,10 @@ AFPSProjectile::AFPSProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
+void AFPSProjectile::SpawnBomb(FVector location)
+{
+	AFPSBombActor* myBomb = GetWorld()->SpawnActor<AFPSBombActor>(BombClass, location, GetActorRotation());
+}
 
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -38,6 +43,27 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+		FVector scale = OtherComp->GetComponentScale();
+
+		scale *= 0.75f;
+
+		if (scale.GetMin() < 0.5f) 
+		{
+			SpawnBomb(OtherActor->GetActorLocation());
+			OtherActor->Destroy();
+		}
+		else 
+		{
+			OtherComp->SetWorldScale3D(scale);
+		}
+
+		UMaterialInstanceDynamic* matPtr = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
+
+		if(matPtr)
+		{
+			matPtr->SetVectorParameterValue("Color", FLinearColor::Red);
+		}
 
 		Destroy();
 	}
