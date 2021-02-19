@@ -10,6 +10,7 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 class AFPSBombActor;
+class ASmallCubeActor;
 
 
 UCLASS()
@@ -27,8 +28,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovement;
 
+	//temp bomb access
 	UPROPERTY(EditDefaultsOnly, Category = "Bombs")
 	TSubclassOf<AFPSBombActor> BombClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Cube")
+	TSubclassOf<ASmallCubeActor> SmallCubeClass;
 
 public:
 
@@ -45,5 +50,7 @@ public:
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
 	void SpawnBomb(FVector location);
+
+	void SpawnSmallerCube(FVector location, FVector scale);
 };
 

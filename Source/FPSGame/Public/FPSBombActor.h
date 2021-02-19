@@ -17,6 +17,7 @@ class FPSGAME_API AFPSBombActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFPSBombActor();
+	AFPSBombActor(float time);
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* meshComp;

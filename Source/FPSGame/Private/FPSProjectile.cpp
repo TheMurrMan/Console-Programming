@@ -2,6 +2,7 @@
 
 #include"FPSProjectile.h"
 #include "FPSBombActor.h"
+#include "SmallCubeActor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -37,6 +38,12 @@ void AFPSProjectile::SpawnBomb(FVector location)
 	AFPSBombActor* myBomb = GetWorld()->SpawnActor<AFPSBombActor>(BombClass, location, GetActorRotation());
 }
 
+void AFPSProjectile::SpawnSmallerCube(FVector location, FVector scale)
+{
+	ASmallCubeActor* myCube = GetWorld()->SpawnActor<ASmallCubeActor>(SmallCubeClass, location, GetActorRotation());
+	myCube->FindComponentByClass<UPrimitiveComponent>()->SetWorldScale3D(scale);
+}
+
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
@@ -44,9 +51,35 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
+		if (OtherActor->ActorHasTag(TEXT("SmallCubeActor"))) 
+		{
+			SpawnBomb(OtherActor->GetActorLocation());
+		}
+		else 
+		{
+			FVector scale = OtherComp->GetComponentScale();
+
+			scale *= 0.25f;
+
+			SpawnSmallerCube(OtherActor->GetActorLocation(), scale);
+			SpawnSmallerCube(OtherActor->GetActorLocation(), scale);
+			SpawnSmallerCube(OtherActor->GetActorLocation(), scale);
+			SpawnSmallerCube(OtherActor->GetActorLocation(), scale);
+		}
+
+		FString tempString = OtherActor->GetFullName();
+
+		//UE_LOG(LogTemp, Warning, tempString.Printf());
+
+		
+
+		OtherActor->Destroy();
+
+		/*
+
 		FVector scale = OtherComp->GetComponentScale();
 
-		scale *= 0.75f;
+		scale *= 0.25f;
 
 		if (scale.GetMin() < 0.5f) 
 		{
@@ -64,7 +97,7 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		{
 			matPtr->SetVectorParameterValue("Color", FLinearColor::Red);
 		}
-
+		*/
 		Destroy();
 	}
 }
