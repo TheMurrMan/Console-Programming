@@ -33,12 +33,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComponent;
 
+	bool charging = false;
+	float chargedDelay = 3;
+	FTimerHandle Charger_TimeHandle; //= GetWorldTimerManager().GenerateHandle(1);
+
 public:
 	AFPSCharacter();
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "ChargedProjectile")
+	TSubclassOf<AFPSProjectile> ChargedProjectileClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay")
@@ -55,6 +62,9 @@ protected:
 	/** Fires a projectile. */
 	void Fire();
 
+	void Charging();
+
+	void ChargedFire();
 	//void SpawnBomb();
 
 	/** Handles moving forward/backward */
@@ -71,6 +81,7 @@ public:
 
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
+
 
 };
 

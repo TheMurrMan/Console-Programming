@@ -44,12 +44,22 @@ void AFPSProjectile::SpawnSmallerCube(FVector location, FVector scale)
 	myCube->FindComponentByClass<UPrimitiveComponent>()->SetWorldScale3D(scale);
 }
 
+void AFPSProjectile::SpawnChargedExplosion(FVector location)
+{
+	AFPSChargedProjectileActor* myCharged = GetWorld()->SpawnActor<AFPSChargedProjectileActor>(ChargedProjClass, location, GetActorRotation());
+}
+
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+		if (this->ActorHasTag(TEXT("ChargedProjectile"))) 
+		{
+			SpawnChargedExplosion(OtherActor->GetActorLocation());
+		}
 
 		if (OtherActor->ActorHasTag(TEXT("SmallCubeActor"))) 
 		{
@@ -67,11 +77,9 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 			SpawnSmallerCube(OtherActor->GetActorLocation(), scale);
 		}
 
-		FString tempString = OtherActor->GetFullName();
+		//FString tempString = OtherActor->GetFullName();
 
-		//UE_LOG(LogTemp, Warning, tempString.Printf());
-
-		
+		//UE_LOG(LogTemp, Warning, tempString.Printf());		
 
 		OtherActor->Destroy();
 

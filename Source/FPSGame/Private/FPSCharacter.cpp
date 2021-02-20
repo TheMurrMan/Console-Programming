@@ -38,7 +38,10 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
+	PlayerInputComponent->BindAction("Charge", IE_Pressed, this, &AFPSCharacter::Charging);
+	PlayerInputComponent->BindAction("Charge", IE_Released, this, &AFPSCharacter::Charging);
 	//PlayerInputComponent->BindAction("SpawnBomb", IE_Pressed, this, &AFPSCharacter::SpawnBomb);
+
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -47,6 +50,23 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
+void AFPSCharacter::Charging() 
+{
+	//UE_LOG(LogTemp, Warning, TEXT("cur Timer = %f") ,elapsed);
+
+	if (charging)
+	{
+		GetWorldTimerManager().ClearTimer(Charger_TimeHandle);
+		//UE_LOG(LogTemp, Warning, TEXT("Clear Timer Here!!!!!"));
+		charging = false;
+	}
+	else 
+	{
+		GetWorldTimerManager().SetTimer(Charger_TimeHandle, this, &AFPSCharacter::ChargedFire, chargedDelay);
+		//UE_LOG(LogTemp, Warning, TEXT("Set Timer Here!!!!!"));	
+		charging = true;
+	}	
+}
 
 void AFPSCharacter::Fire()
 {
@@ -89,6 +109,43 @@ void AFPSCharacter::SpawnBomb()
 	AFPSBombActor* myBomb = GetWorld()->SpawnActor<AFPSBombActor>(BombClass, GetActorLocation(), GetActorRotation());
 }
 */
+
+void AFPSCharacter::ChargedFire()
+{
+	// try and fire a projectile
+	if (ProjectileClass)
+	{
+		// Grabs location from the mesh that must have a socket called "Muzzle" in his skeleton
+		FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
+		// Use controller rotation which is our view direction in first person
+		FRotator MuzzleRotation = GetControlRotation();
+
+		//Set Spawn Collision Handling Override
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		// spawn the projectile at the muzzle
+		GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+	}
+
+	// try and play the sound if specified
+	if (FireSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+	}
+
+	// try and play a firing animation if specified
+	if (FireAnimation)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = Mesh1PComponent->GetAnimInstance();
+		if (AnimInstance)
+		{
+			AnimInstance->PlaySlotAnimationAsDynamicMontage(FireAnimation, "Arms", 0.0f);
+		}
+	}
+	//charging = false;
+}
 
 void AFPSCharacter::MoveForward(float Value)
 {

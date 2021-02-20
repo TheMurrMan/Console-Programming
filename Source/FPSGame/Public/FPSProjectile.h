@@ -11,6 +11,7 @@ class UProjectileMovementComponent;
 class USphereComponent;
 class AFPSBombActor;
 class ASmallCubeActor;
+class AFPSChargedProjectileActor;
 
 
 UCLASS()
@@ -35,6 +36,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Cube")
 	TSubclassOf<ASmallCubeActor> SmallCubeClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "ChargedProj")
+	TSubclassOf<AFPSChargedProjectileActor> ChargedProjClass;
+
 public:
 
 	AFPSProjectile();
@@ -52,5 +56,7 @@ public:
 	void SpawnBomb(FVector location);
 
 	void SpawnSmallerCube(FVector location, FVector scale);
+
+	void SpawnChargedExplosion(FVector location);
 };
 
