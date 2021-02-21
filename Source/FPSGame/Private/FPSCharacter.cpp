@@ -38,8 +38,11 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
+
+	//Bind actions to simulate holding the charge key
 	PlayerInputComponent->BindAction("Charge", IE_Pressed, this, &AFPSCharacter::Charging);
 	PlayerInputComponent->BindAction("Charge", IE_Released, this, &AFPSCharacter::Charging);
+
 	//PlayerInputComponent->BindAction("SpawnBomb", IE_Pressed, this, &AFPSCharacter::SpawnBomb);
 
 
@@ -50,20 +53,18 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
+//Swapping function for checking charging
 void AFPSCharacter::Charging() 
 {
-	//UE_LOG(LogTemp, Warning, TEXT("cur Timer = %f") ,elapsed);
-
+	//if we are currently charging clear the timer for charged projectile
 	if (charging)
 	{
 		GetWorldTimerManager().ClearTimer(Charger_TimeHandle);
-		//UE_LOG(LogTemp, Warning, TEXT("Clear Timer Here!!!!!"));
 		charging = false;
 	}
-	else 
+	else // if we arent charging start charging
 	{
-		GetWorldTimerManager().SetTimer(Charger_TimeHandle, this, &AFPSCharacter::ChargedFire, chargedDelay);
-		//UE_LOG(LogTemp, Warning, TEXT("Set Timer Here!!!!!"));	
+		GetWorldTimerManager().SetTimer(Charger_TimeHandle, this, &AFPSCharacter::ChargedFire, chargedDelay);	
 		charging = true;
 	}	
 }
@@ -103,17 +104,12 @@ void AFPSCharacter::Fire()
 		}
 	}
 }
-/*
-void AFPSCharacter::SpawnBomb()
-{
-	AFPSBombActor* myBomb = GetWorld()->SpawnActor<AFPSBombActor>(BombClass, GetActorLocation(), GetActorRotation());
-}
-*/
 
+//Made a copy of the fire function but changed to a charged projectile being spawned
 void AFPSCharacter::ChargedFire()
 {
 	// try and fire a projectile
-	if (ProjectileClass)
+	if (ChargedProjectileClass)
 	{
 		// Grabs location from the mesh that must have a socket called "Muzzle" in his skeleton
 		FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
@@ -125,7 +121,7 @@ void AFPSCharacter::ChargedFire()
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 		// spawn the projectile at the muzzle
-		GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		GetWorld()->SpawnActor<AFPSProjectile>(ChargedProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
 	}
 
 	// try and play the sound if specified
@@ -144,7 +140,6 @@ void AFPSCharacter::ChargedFire()
 			AnimInstance->PlaySlotAnimationAsDynamicMontage(FireAnimation, "Arms", 0.0f);
 		}
 	}
-	//charging = false;
 }
 
 void AFPSCharacter::MoveForward(float Value)
@@ -165,3 +160,6 @@ void AFPSCharacter::MoveRight(float Value)
 		AddMovementInput(GetActorRightVector(), Value);
 	}
 }
+
+//Save for reference Later
+//UE_LOG(LogTemp, Warning, TEXT("cur Timer = %f") ,elapsed);

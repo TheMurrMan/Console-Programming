@@ -29,13 +29,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovement;
 
-	//temp bomb access
+	/** Bomb class reference */
 	UPROPERTY(EditDefaultsOnly, Category = "Bombs")
 	TSubclassOf<AFPSBombActor> BombClass;
 
+	/** Small Cube class reference */
 	UPROPERTY(EditDefaultsOnly, Category = "Cube")
 	TSubclassOf<ASmallCubeActor> SmallCubeClass;
 
+	/** Charged Projectile class reference */
 	UPROPERTY(EditDefaultsOnly, Category = "ChargedProj")
 	TSubclassOf<AFPSChargedProjectileActor> ChargedProjClass;
 
@@ -53,10 +55,13 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
+	/** Spawns a FPSBombActor  **/
 	void SpawnBomb(FVector location);
 
+	/** Spawns a SmallCubeActor **/
 	void SpawnSmallerCube(FVector location, FVector scale);
 
+	/** Spawns a FPSChargedProjectileActor **/
 	void SpawnChargedExplosion(FVector location);
 };
 

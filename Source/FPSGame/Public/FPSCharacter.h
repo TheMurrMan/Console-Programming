@@ -33,9 +33,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComponent;
 
+	//Variables used for handling the charged Projectile 
 	bool charging = false;
 	float chargedDelay = 3;
-	FTimerHandle Charger_TimeHandle; //= GetWorldTimerManager().GenerateHandle(1);
+	FTimerHandle Charger_TimeHandle;
 
 public:
 	AFPSCharacter();
@@ -44,6 +45,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
 
+	/** Projectile class to spawn when using chargedFire */
 	UPROPERTY(EditDefaultsOnly, Category = "ChargedProjectile")
 	TSubclassOf<AFPSProjectile> ChargedProjectileClass;
 
@@ -62,10 +64,11 @@ protected:
 	/** Fires a projectile. */
 	void Fire();
 
+	/** used for determing charged projectile being fired */
 	void Charging();
 
+	/** Fires a Charged projectile. */
 	void ChargedFire();
-	//void SpawnBomb();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);

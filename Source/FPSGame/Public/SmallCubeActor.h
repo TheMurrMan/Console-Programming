@@ -17,6 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	ASmallCubeActor();
 
+	//Create some mesh and color components
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* meshComp;
 	UMaterialInstanceDynamic* materialInst;

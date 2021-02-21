@@ -28,6 +28,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "ChargedActor")
 	UParticleSystem* ExplosionTemplate;
 
+	/** Charged Explosion Function **/
 	UFUNCTION()
 	void ChargedExplode();
 

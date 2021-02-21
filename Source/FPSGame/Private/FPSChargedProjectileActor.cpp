@@ -17,20 +17,26 @@ AFPSChargedProjectileActor::AFPSChargedProjectileActor()
 
 void AFPSChargedProjectileActor::ChargedExplode() 
 {
+	//Create particle system for visual effect
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionTemplate, GetActorLocation());
 
+	//this determines what things we check for later in our overlap
 	FCollisionObjectQueryParams queryParams;
 	queryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	queryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
 
+	//radius of our area
 	FCollisionShape collShape;
-	collShape.SetSphere(500.0f);
+	collShape.SetSphere(750.0f);
 
+	//determine whats in our radius
 	TArray<FOverlapResult> outOverlaps;
 	GetWorld()->OverlapMultiByObjectType(outOverlaps, GetActorLocation(), FQuat::Identity, queryParams, collShape);
 
+	//For each result we check to see if we want to do something to it 
 	for (FOverlapResult result : outOverlaps)
 	{
+		//if the comp exists and has physics destroy it 
 		UPrimitiveComponent* Overlap = result.GetComponent();
 		if (Overlap && Overlap->IsSimulatingPhysics())
 		{
@@ -43,6 +49,7 @@ void AFPSChargedProjectileActor::ChargedExplode()
 void AFPSChargedProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
+	//Explode immediately
 	ChargedExplode();
 }
 
@@ -50,6 +57,5 @@ void AFPSChargedProjectileActor::BeginPlay()
 void AFPSChargedProjectileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
