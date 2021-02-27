@@ -61,6 +61,9 @@ public:
 
 protected:
 	
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(ExampleDelegate, float, exampleFloat)
+
 	/** Fires a projectile. */
 	void Fire();
 
@@ -68,7 +71,8 @@ protected:
 	void Charging();
 
 	/** Fires a Charged projectile. */
-	void ChargedFire();
+	UFUNCTION()
+	void ChargedFire(float scale);
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);

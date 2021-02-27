@@ -56,15 +56,26 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 //Swapping function for checking charging
 void AFPSCharacter::Charging() 
 {
+
+	//FTimerHandle timer;
+	FTimerDelegate timerDel;
+	
+	float RandomScale = FMath::RandRange(1.0f, 10.0f);
+
+	timerDel.BindUFunction(this, FName("ChargedFire"), RandomScale);
+
+	//GetWorld()->GetTimerManager().SetTimer(timer, timerDel, 3.0f, false);
 	//if we are currently charging clear the timer for charged projectile
 	if (charging)
 	{
-		GetWorldTimerManager().ClearTimer(Charger_TimeHandle);
+		//GetWorldTimerManager().ClearTimer(Charger_TimeHandle);
+		GetWorld()->GetTimerManager().ClearTimer(Charger_TimeHandle);
 		charging = false;
 	}
 	else // if we arent charging start charging
 	{
-		GetWorldTimerManager().SetTimer(Charger_TimeHandle, this, &AFPSCharacter::ChargedFire, chargedDelay);	
+		//GetWorldTimerManager().SetTimer(Charger_TimeHandle, this, &AFPSCharacter::ChargedFire, chargedDelay);	
+		GetWorld()->GetTimerManager().SetTimer(Charger_TimeHandle, timerDel, 3.0f, false);
 		charging = true;
 	}	
 }
@@ -106,7 +117,7 @@ void AFPSCharacter::Fire()
 }
 
 //Made a copy of the fire function but changed to a charged projectile being spawned
-void AFPSCharacter::ChargedFire()
+void AFPSCharacter::ChargedFire(float scale)
 {
 	// try and fire a projectile
 	if (ChargedProjectileClass)
