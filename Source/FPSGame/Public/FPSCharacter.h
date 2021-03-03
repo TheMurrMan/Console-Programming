@@ -62,7 +62,7 @@ public:
 protected:
 	
 	//DECLARE_DYNAMIC_MULTICAST_DELEGATE
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(ExampleDelegate, float, exampleFloat)
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(ExampleDelegate, float, exampleFloat)
 
 	/** Fires a projectile. */
 	void Fire();
