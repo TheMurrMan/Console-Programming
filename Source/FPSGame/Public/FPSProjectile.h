@@ -41,6 +41,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "ChargedProj")
 	TSubclassOf<AFPSChargedProjectileActor> ChargedProjClass;
 
+
+
+	float ProjSpeed = 3000.0f;
+
 public:
 
 	AFPSProjectile();
@@ -48,6 +52,9 @@ public:
 	/** called when projectile hits something */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+	void ChangeProjSpeed(float val);
 
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }

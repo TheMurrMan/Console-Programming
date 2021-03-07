@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include <Runtime/Online/HTTP/Public/http.h>
+#include "Runtime/Online/HTTP/Public/http.h"
 
 #include "MyHTTPActor.generated.h"
 
@@ -13,6 +13,8 @@
 //class FHttpModule;
 //class FHttpRequestPtr;
 //class FHttpResponsePtr;
+
+//class AFPSProjectile;
 
 UCLASS()
 class FPSGAME_API AMyHTTPActor : public AActor
@@ -23,6 +25,9 @@ public:
 	// Sets default values for this actor's properties
 	AMyHTTPActor();
 	FHttpModule* http;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "ProjectileBP")
+	class AFPSProjectile* ProjBP;
 
 	void OnRecieved(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 

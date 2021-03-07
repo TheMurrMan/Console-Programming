@@ -34,6 +34,11 @@ AFPSProjectile::AFPSProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
+void AFPSProjectile::ChangeProjSpeed(float val) 
+{
+	ProjectileMovement->InitialSpeed = val * 100.f;
+}
+
 //Spawn a bomb actor
 void AFPSProjectile::SpawnBomb(FVector location)
 {
