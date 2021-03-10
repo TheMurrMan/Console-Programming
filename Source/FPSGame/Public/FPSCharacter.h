@@ -57,7 +57,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	UAnimSequence* FireAnimation;
 
-	
+	void storeAPIData(float val1, float val2);
 
 protected:
 	
@@ -81,6 +81,9 @@ protected:
 	void MoveRight(float Val);
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+	float APIProjSpeed;
+	float APISecondVar;
 
 public:
 	/** Returns Mesh1P subobject **/

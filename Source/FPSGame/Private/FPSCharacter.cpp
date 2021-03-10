@@ -95,7 +95,8 @@ void AFPSCharacter::Fire()
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 		// spawn the projectile at the muzzle
-		GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		AFPSProjectile* spawnedProj = GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		spawnedProj->ChangeProjSpeed(APIProjSpeed);
 	}
 
 	// try and play the sound if specified
@@ -116,6 +117,13 @@ void AFPSCharacter::Fire()
 	}
 }
 
+void AFPSCharacter::storeAPIData(float val1, float val2) 
+{
+	APIProjSpeed = val1;
+	APISecondVar = val2;
+}
+
+
 //Made a copy of the fire function but changed to a charged projectile being spawned
 void AFPSCharacter::ChargedFire(float scale)
 {
@@ -132,7 +140,8 @@ void AFPSCharacter::ChargedFire(float scale)
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 		// spawn the projectile at the muzzle
-		GetWorld()->SpawnActor<AFPSProjectile>(ChargedProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		AFPSProjectile* spawnedProj = GetWorld()->SpawnActor<AFPSProjectile>(ChargedProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		//spawnedProj->ChangeProjSpeed(APIProjSpeed);
 	}
 
 	// try and play the sound if specified

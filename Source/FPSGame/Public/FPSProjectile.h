@@ -48,6 +48,7 @@ protected:
 public:
 
 	AFPSProjectile();
+	AFPSProjectile(float speed);
 
 	/** called when projectile hits something */
 	UFUNCTION()

@@ -2,6 +2,9 @@
 
 
 #include "MyHTTPActor.h"
+//#include "FPSProjectile.h"
+#include "FPSCharacter.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AMyHTTPActor::AMyHTTPActor()
 {
@@ -40,6 +43,33 @@ void AMyHTTPActor::OnRecieved(FHttpRequestPtr Request, FHttpResponsePtr Response
 
         //FTimerDelegate timerDel;
 
+
+        TArray<AActor*> characterRef;
+
+        UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TEXT("Character")), characterRef);
+
+        //TSubclassOf<AFPSProjectile> projRef;
+
+        //UGameplayStatics::GetActorOfClass(GetWorld(), projRef);
+
+        AFPSCharacter* character;
+
+
+        AActor* act = characterRef[0];
+
+        character = Cast<AFPSCharacter>(act);
+
+        character->storeAPIData(open, close);
+
+        //auto projPawn = GetWorld()->getCl
+
+        /*for each (AActor* actor in projRef)
+        {
+            proj = Cast<AFPSProjectile>(actor->GetClass());
+        }
+         */
+        //proj = Cast<AFPSProjectile>(act);
+        //proj->ChangeProjSpeed(open);
         
         //float RandomScale = FMath::RandRange(1.0f, 10.0f);
 
